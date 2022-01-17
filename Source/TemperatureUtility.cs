@@ -50,69 +50,68 @@ namespace Celsius
 
         internal static void RecalculateAirProperties()
         {
-            ThingThermalProperties.Air.heatCapacity = Settings.AirHeatCapacity;
-            airConductivity = ThingThermalProperties.Air.conductivity * Settings.HeatConductivityFactor * Settings.ConvectionConductivityEffect;
-            airLerpFactor = Mathf.Min(1 - Mathf.Pow(1 - airConductivity / ThingThermalProperties.Air.heatCapacity, Celsius.TemperatureInfo.SecondsPerUpdate), 0.25f);
+            airConductivity = Settings.AirHeatConductivity * Settings.HeatConductivityFactor * Settings.ConvectionConductivityEffect;
+            airLerpFactor = Mathf.Min(1 - Mathf.Pow(1 - airConductivity / Settings.AirHeatCapacity, Celsius.TemperatureInfo.SecondsPerUpdate), 0.25f);
             LogUtility.Log($"Air conductivity: {airConductivity:F2}. Air lerp factor: {airLerpFactor:P1}.");
         }
 
-        internal static float DiffusionTemperatureChangeSingle(float oldTemp, float neighbourTemp, ThingThermalProperties thermalProps, bool log = false)
+        internal static float DiffusionTemperatureChangeSingle(float oldTemp, float neighbourTemp, float capacity, float conductivity, bool log = false)
         {
             if (Mathf.Abs(oldTemp - neighbourTemp) < TemperatureChangePrecision)
                 return 0;
-            float finalTemp = GenMath.WeightedAverage(oldTemp, thermalProps.heatCapacity, neighbourTemp, thermalProps.heatCapacity);
-            float conductivity, lerpFactor;
-            if (thermalProps == ThingThermalProperties.Air)
+            float finalTemp = (oldTemp + neighbourTemp) / 2;
+            float effectiveConductivity, lerpFactor;
+            if (capacity == Settings.AirHeatCapacity && conductivity == Settings.AirHeatConductivity)
             {
-                conductivity = airConductivity;
+                effectiveConductivity = airConductivity;
                 lerpFactor = airLerpFactor;
             }
             else
             {
-                conductivity = thermalProps.conductivity * Settings.HeatConductivityFactor;
-                lerpFactor = Mathf.Min(1 - Mathf.Pow(1 - conductivity / thermalProps.heatCapacity, Celsius.TemperatureInfo.SecondsPerUpdate), 0.25f);
+                effectiveConductivity = conductivity * Settings.HeatConductivityFactor;
+                lerpFactor = Mathf.Min(1 - Mathf.Pow(1 - effectiveConductivity / capacity, Celsius.TemperatureInfo.SecondsPerUpdate), 0.25f);
             }
 
             if (log)
             {
-                LogUtility.Log($"Old temperature: {oldTemp:F1}C. Neighbour temperature: {neighbourTemp:F1}C. Heat capacity: {thermalProps.heatCapacity}. Conductivity: {conductivity}.");
+                LogUtility.Log($"Old temperature: {oldTemp:F1}C. Neighbour temperature: {neighbourTemp:F1}C. Heat capacity: {capacity}. Conductivity: {effectiveConductivity}.");
                 LogUtility.Log($"Final temperature: {finalTemp:F1}C. Lerp factor: {lerpFactor:P1}.");
             }
 
             return lerpFactor * (finalTemp - oldTemp);
         }
 
-        internal static (float, float) DiffusionTemperatureChangeMutual(float temp1, ThingThermalProperties props1, float temp2, ThingThermalProperties props2, bool log = false)
+        internal static (float, float) DiffusionTemperatureChangeMutual(float temp1, float capacity1, float conductivity1, float temp2, float capacity2, float conductivity2, bool log = false)
         {
             if (Mathf.Abs(temp1 - temp2) < TemperatureChangePrecision)
                 return (0, 0);
-            float finalTemp = GenMath.WeightedAverage(temp1, props1.heatCapacity, temp2, props2.heatCapacity);
+            float finalTemp = GenMath.WeightedAverage(temp1, capacity1, temp2, capacity2);
             float conductivity, lerpFactor1, lerpFactor2;
 
-            if (props1 == ThingThermalProperties.Air && props2 == ThingThermalProperties.Air)
+            if (capacity1 == Settings.AirHeatCapacity && capacity2 == Settings.AirHeatCapacity && conductivity1 == Settings.AirHeatConductivity && conductivity2 == Settings.AirHeatConductivity)
             {
                 conductivity = airConductivity;
                 lerpFactor1 = lerpFactor2 = airLerpFactor;
             }
 
-            else if (props1 == props2)
-            {
-                LogUtility.Log($"Both objects have the same thermal props: {props1}");
-                conductivity = props1.conductivity * Settings.HeatConductivityFactor;
-                lerpFactor1 = Mathf.Min(lerpFactor2 = 1 - Mathf.Pow(1 - conductivity / props1.heatCapacity, Celsius.TemperatureInfo.SecondsPerUpdate), 0.25f);
-            }
+            //else if (props1 == props2)
+            //{
+            //    LogUtility.Log($"Both objects have the same thermal props: {props1}");
+            //    conductivity = props1.conductivity * Settings.HeatConductivityFactor;
+            //    lerpFactor1 = Mathf.Min(lerpFactor2 = 1 - Mathf.Pow(1 - conductivity / props1.heatCapacity, Celsius.TemperatureInfo.SecondsPerUpdate), 0.25f);
+            //}
 
             else
             {
-                conductivity = Mathf.Sqrt(props1.conductivity * props2.conductivity) * Settings.HeatConductivityFactor;
-                lerpFactor1 = Mathf.Min(1 - Mathf.Pow(1 - conductivity / props1.heatCapacity, Celsius.TemperatureInfo.SecondsPerUpdate), 0.25f);
-                lerpFactor2 = Mathf.Min(1 - Mathf.Pow(1 - conductivity / props2.heatCapacity, Celsius.TemperatureInfo.SecondsPerUpdate), 0.25f);
+                conductivity = Mathf.Sqrt(conductivity1 * conductivity2) * Settings.HeatConductivityFactor;
+                lerpFactor1 = Mathf.Min(1 - Mathf.Pow(1 - conductivity / capacity1, Celsius.TemperatureInfo.SecondsPerUpdate), 0.25f);
+                lerpFactor2 = Mathf.Min(1 - Mathf.Pow(1 - conductivity / capacity2, Celsius.TemperatureInfo.SecondsPerUpdate), 0.25f);
             }
 
             if (log)
             {
-                LogUtility.Log($"Object 1: t = {temp1:F1}C, capacity = {props1.heatCapacity}, conductivity = {props1.conductivity}");
-                LogUtility.Log($"Object 2: t = {temp2:F1}C, capacity = {props2.heatCapacity}, conductivity = {props2.conductivity}");
+                LogUtility.Log($"Object 1: t = {temp1:F1}C, capacity = {capacity1}, conductivity = {conductivity1}");
+                LogUtility.Log($"Object 2: t = {temp2:F1}C, capacity = {capacity2}, conductivity = {conductivity2}");
                 LogUtility.Log($"Final temperature: {finalTemp:F1}C. Overall conductivity: {conductivity:F1}. Lerp factor 1: {lerpFactor1:P1}. Lerp factor 2: {lerpFactor2:P1}.");
             }
 
@@ -123,22 +122,29 @@ namespace Celsius
 
         #region THERMAL PROPERTIES
 
-        public static ThingThermalProperties GetThermalProperties(this IntVec3 cell, Map map)
+        public static Thing GetCellThermalThing(this IntVec3 cell, Map map) =>
+            cell.InBounds(map) ? cell.GetThingList(map).Find(thing => thing.GetStatValue(DefOf.HeatCapacity) > 0) : null;
+
+        public static (float heatCapacity, float heatConductivity) GetThermalProperties(this IntVec3 cell, Map map)
         {
-            ThingThermalProperties thermalProps = null;
-            if (cell.InBounds(map))
-                thermalProps = cell.GetThingList(map)
-                    .Select(thing => thing.TryGetComp<CompThermal>()?.ThermalProperties)
-                    .FirstOrDefault(props => props != null && props.heatCapacity > 0);
-            return thermalProps ?? ThingThermalProperties.Air;
+            Thing thing = cell.GetCellThermalThing(map);
+            return thing != null ? (thing.GetStatValue(DefOf.HeatCapacity), thing.GetStatValue(DefOf.HeatConductivity)) : (Settings.AirHeatCapacity, Settings.AirHeatConductivity);
         }
 
         /// <summary>
         /// Returns heat capacity for a cell
         /// </summary>
-        public static float GetHeatCapacity(this IntVec3 cell, Map map) => cell.GetThermalProperties(map).heatCapacity;
+        public static float GetHeatCapacity(this IntVec3 cell, Map map)
+        {
+            Thing thing = cell.GetCellThermalThing(map);
+            return thing != null ? thing.GetStatValue(DefOf.HeatCapacity) : Settings.AirHeatCapacity;
+        }
 
-        public static float GetHeatConductivity(this IntVec3 cell, Map map) => cell.GetThermalProperties(map).conductivity;
+        public static float GetHeatConductivity(this IntVec3 cell, Map map)
+        {
+            Thing thing = cell.GetCellThermalThing(map);
+            return thing != null ? thing.GetStatValue(DefOf.HeatConductivity) : Settings.AirHeatConductivity;
+        }
 
         public static ThingDef GetUnderlyingStuff(this Thing thing) => thing.Stuff ?? thing.def.defaultStuff;
 
@@ -146,10 +152,10 @@ namespace Celsius
 
         #region TERRAIN
 
-        public static ThingThermalProperties GetTerrainThermalProperties(this IntVec3 cell, Map map) =>
-            cell.GetTerrain(map).GetModExtension<ThingThermalProperties>() ?? ThingThermalProperties.Empty;
+        //public static ThingThermalProperties GetTerrainThermalProperties(this IntVec3 cell, Map map) =>
+        //    cell.GetTerrain(map).GetModExtension<ThingThermalProperties>() ?? ThingThermalProperties.Empty;
 
-        public static bool HasTerrainTemperature(this IntVec3 cell, Map map) => cell.GetTerrainThermalProperties(map).heatCapacity > 0;
+        public static bool HasTerrainTemperature(this IntVec3 cell, Map map) => cell.GetTerrain(map).StatBaseDefined(DefOf.HeatCapacity);
 
         public static float FreezingPoint(this TerrainDef water)
         {

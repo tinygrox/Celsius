@@ -4,13 +4,13 @@ namespace Celsius
 {
     public class ThingThermalProperties : DefModExtension
     {
-        public static readonly ThingThermalProperties Empty = new ThingThermalProperties();
+        //public static readonly ThingThermalProperties Empty = new ThingThermalProperties();
 
-        public static readonly ThingThermalProperties Air = new ThingThermalProperties()
-        {
-            heatCapacity = Settings.AirHeatCapacity,
-            conductivity = 0.03f
-        };
+        //public static readonly ThingThermalProperties Air = new ThingThermalProperties()
+        //{
+        //    heatCapacity = Settings.AirHeatCapacity,
+        //    conductivity = 0.03f
+        //};
 
         public static readonly ThingThermalProperties Meat = new ThingThermalProperties()
         {

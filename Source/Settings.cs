@@ -8,6 +8,7 @@ namespace Celsius
         public static bool FreezingAndMeltingEnabled;
         public static bool AutoignitionEnabled;
         public static float AirHeatCapacity;
+        public static float AirHeatConductivity = 0.03f;
         public static float HeatConductivityFactor;
         public static float ConvectionConductivityEffect;
         public static float HeatPushEffect;

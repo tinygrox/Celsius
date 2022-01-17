@@ -141,7 +141,9 @@ namespace Celsius
                 return false;
             };
             RegionTraverser.BreadthFirstTraverse(region, entryCondition, regionProcessor, 9999, RegionType.Set_Passable);
-            LogUtility.Log($"Safe region found: {foundReg}");
+            if (foundReg != null)
+                LogUtility.Log($"Safe region found.");
+            else LogUtility.Log($"Safe region not found.");
             __result = foundReg;
             return false;
         }

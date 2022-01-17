@@ -4,43 +4,35 @@
 
 	<!-- Note: Heat capacity in J/C, conductivity in W/C. Figures can be taken e.g. here: https://www.engineeringtoolbox.com/specific-heat-solids-d_154.html -->
 
-	<Operation Class="PatchOperationAddModExtension">
-		<xpath>Defs/ThingDef[thingClass="Mineable"]</xpath>
+	<Operation Class="PatchOperationAdd">
+		<xpath>Defs/ThingDef[thingClass="Mineable"]/statBases</xpath>
 		<value>
-			<li Class="Celsius.ThingThermalProperties">
-				<heatCapacity>2200000</heatCapacity>
-				<conductivity>2.5</conductivity>
-			</li>
+			<HeatCapacity>2200000</HeatCapacity>
+			<HeatConductivity>2.5</HeatConductivity>
 		</value>
 	</Operation>
 
-	<Operation Class="PatchOperationAddModExtension">
-		<xpath>Defs/ThingDef[thingClass="Building_Door"]</xpath>
+	<Operation Class="XmlExtensions.PatchOperationSafeAddOrReplace">
+		<xpath>Defs/ThingDef[defName="Wall"]/statBases</xpath>
 		<value>
-			<li Class="Celsius.ThingThermalProperties">
-				<mass>8</mass>
-				<heatCapacity>12000</heatCapacity>
-			</li>
+			<Mass>20</Mass>
+			<HeatCapacity>16000</HeatCapacity>
 		</value>
 	</Operation>
 
-	<Operation Class="PatchOperationAddModExtension">
-		<xpath>Defs/ThingDef[defName="Wall"]</xpath>
+	<Operation Class="XmlExtensions.PatchOperationSafeAddOrReplace">
+		<xpath>Defs/ThingDef[thingClass="Building_Door"]/statBases</xpath>
 		<value>
-			<li Class="Celsius.ThingThermalProperties">
-				<mass>20</mass>
-				<heatCapacity>16000</heatCapacity>
-			</li>
+			<Mass>8</Mass>
+			<HeatCapacity>12000</HeatCapacity>
 		</value>
 	</Operation>
 
-	<Operation Class="PatchOperationAddModExtension">
-		<xpath>Defs/ThingDef[defName="Vent"]</xpath>
+	<Operation Class="PatchOperationAdd">
+		<xpath>Defs/ThingDef[defName="Vent"]/statBases</xpath>
 		<value>
-			<li Class="Celsius.ThingThermalProperties">
-				<heatCapacity>9300</heatCapacity>
-				<conductivity>20</conductivity>
-			</li>
+			<HeatCapacity>9300</HeatCapacity>
+			<HeatConductivity>20</HeatConductivity>
 		</value>
 	</Operation>
 

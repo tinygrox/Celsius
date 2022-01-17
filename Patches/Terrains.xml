@@ -2,83 +2,83 @@
 
 <Patch>
 
-	<Operation Class="PatchOperationAddModExtension">
+	<Operation Class="XmlExtensions.PatchOperationSafeAdd">
 		<xpath>Defs/TerrainDef[defName="WaterDeep"]</xpath>
 		<value>
-			<li Class="Celsius.ThingThermalProperties">
-				<heatCapacity>4200000</heatCapacity>
-				<conductivity>0.6</conductivity>
-			</li>
+			<statBases>
+				<HeatCapacity>420000</HeatCapacity>
+				<HeatConductivity>0.6</HeatConductivity>
+			</statBases>
 		</value>
 	</Operation>
 
-	<Operation Class="PatchOperationAddModExtension">
+	<Operation Class="XmlExtensions.PatchOperationSafeAdd">
 		<xpath>Defs/TerrainDef[defName="WaterOceanDeep"]</xpath>
 		<value>
-			<li Class="Celsius.ThingThermalProperties">
-				<heatCapacity>4000000</heatCapacity>
-				<conductivity>0.6</conductivity>
-			</li>
+			<statBases>
+				<HeatCapacity>400000</HeatCapacity>
+				<HeatConductivity>0.6</HeatConductivity>
+			</statBases>
 		</value>
 	</Operation>
 
-	<Operation Class="PatchOperationAddModExtension">
+	<Operation Class="XmlExtensions.PatchOperationSafeAdd">
 		<xpath>Defs/TerrainDef[defName="WaterMovingChestDeep"]</xpath>
 		<value>
-			<li Class="Celsius.ThingThermalProperties">
-				<heatCapacity>3000000</heatCapacity>
-				<conductivity>0.6</conductivity>
-			</li>
+			<statBases>
+				<HeatCapacity>300000</HeatCapacity>
+				<HeatConductivity>0.6</HeatConductivity>
+			</statBases>
 		</value>
 	</Operation>
 
-	<Operation Class="PatchOperationAddModExtension">
+	<Operation Class="XmlExtensions.PatchOperationSafeAdd">
 		<xpath>Defs/TerrainDef[defName="WaterShallow"]</xpath>
 		<value>
-			<li Class="Celsius.ThingThermalProperties">
-				<heatCapacity>2100000</heatCapacity>
-				<conductivity>0.6</conductivity>
-			</li>
+			<statBases>
+				<HeatCapacity>210000</HeatCapacity>
+				<HeatConductivity>0.6</HeatConductivity>
+			</statBases>
 		</value>
 	</Operation>
 
-	<Operation Class="PatchOperationAddModExtension">
+	<Operation Class="XmlExtensions.PatchOperationSafeAdd">
 		<xpath>Defs/TerrainDef[defName="WaterOceanShallow"]</xpath>
 		<value>
-			<li Class="Celsius.ThingThermalProperties">
-				<heatCapacity>2000000</heatCapacity>
-				<conductivity>0.6</conductivity>
-			</li>
+			<statBases>
+				<HeatCapacity>200000</HeatCapacity>
+				<HeatConductivity>0.6</HeatConductivity>
+			</statBases>
 		</value>
 	</Operation>
 
-	<Operation Class="PatchOperationAddModExtension">
+	<Operation Class="XmlExtensions.PatchOperationSafeAdd">
 		<xpath>Defs/TerrainDef[defName="WaterMovingShallow"]</xpath>
 		<value>
-			<li Class="Celsius.ThingThermalProperties">
-				<heatCapacity>2000000</heatCapacity>
-				<conductivity>0.6</conductivity>
-			</li>
+			<statBases>
+				<HeatCapacity>200000</HeatCapacity>
+				<HeatConductivity>0.6</HeatConductivity>
+			</statBases>
 		</value>
 	</Operation>
 
-	<Operation Class="PatchOperationAddModExtension">
+	<Operation Class="XmlExtensions.PatchOperationSafeAdd">
 		<xpath>Defs/TerrainDef[defName="Marsh"]</xpath>
 		<value>
-			<li Class="Celsius.ThingThermalProperties">
-				<heatCapacity>2700000</heatCapacity>
-				<conductivity>1</conductivity>
-			</li>
+			<statBases>
+				<HeatCapacity>270000</HeatCapacity>
+				<HeatConductivity>1</HeatConductivity>
+			</statBases>
 		</value>
 	</Operation>
 
-	<Operation Class="PatchOperationAddModExtension">
+	<Operation Class="XmlExtensions.PatchOperationSafeAdd">
 		<xpath>Defs/TerrainDef[defName="Ice"]</xpath>
 		<value>
-			<li Class="Celsius.ThingThermalProperties">
-				<heatCapacity>2000000</heatCapacity>
-				<conductivity>2</conductivity>
-			</li>
+			<statBases>
+				<HeatCapacity>200000</HeatCapacity>
+				<HeatConductivity>2</HeatConductivity>
+			</statBases>
 		</value>
 	</Operation>
 
